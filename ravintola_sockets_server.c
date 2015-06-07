@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
 		if (n < 0) error("ERROR reading from socket");
 		if ( n == 0 ) close(newsockfd);
 		if ( strcmp(buffer, "client") > 0 ) {
+		    // print order to stdio
 		    printf("\nOrder from %s",buffer); 
 		}
 	    }
