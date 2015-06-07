@@ -8,7 +8,7 @@
      printf:n tilalta kirjoittamaan fifoon.
 */
 /*
-  $ gcc -o exec_c2 ravintola_fifo_client.c  -Wall
+  $ gcc -o exec_c2 ravintola_fifo_client.c -Wall
   $ ./exec_c2 localhost 5000 1   
  */
 #include <string.h>

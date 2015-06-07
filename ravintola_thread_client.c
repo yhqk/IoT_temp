@@ -7,7 +7,7 @@
   $ gcc -o exec_c3 ravintola_thread_client.c  -Wall
   $ ./exec_c3 localhost 5000  
 
-  There can be serval clients from different termials. 
+  There can be several clients from different termials. 
  */
 #include <string.h>
 #include <stdlib.h>

@@ -1,5 +1,5 @@
 /* Ravintola step 1
-  A client to take different orders  
+  A client who makes orders  
   * Tehdään ravintolan tilauspalvelu, joka toimii internetin yli.
   * Luo socket, joka odottaa esim. portissa 5000 yhteyksiä. 
     Kun yhteys on luoto, forkkaa lapsi ja anna uus yhdistetty 
@@ -16,7 +16,7 @@
   $ gcc -o exec_c1 ravintola_sockets_client.c  -Wall
   $ ./exec_c1 localhost 5000  
 
-  There can be serval clients from different termials. 
+  There can be several clients from different termials. 
  */
 #include <string.h>
 #include <stdlib.h>

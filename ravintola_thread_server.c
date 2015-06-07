@@ -1,7 +1,15 @@
 /* ravintola server 3 
+  Server side to receive the order (order is print out as stdio
   - Muokkaa ravintola käyttämään säikeitä prosessien tilalta. Rakenne
    pysyy samana.
 */
+
+/* Compiling and Execution
+  $ gcc -o exec_s3 ravintola_thread_client.c  -Wall -lpthread
+  $ ./exec_c3 5000  
+
+  There can be several clients from different termials. 
+ */
 
 #include <sys/epoll.h>
 #include <stdio.h>
