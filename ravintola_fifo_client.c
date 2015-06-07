@@ -1,4 +1,16 @@
-// client for ravintola_server_2.c write to file via FIFO 
+/* Ravintola step 2
+   Client to make order and pass to FIFO file. 
+   * Lisää pääohjelmalle alkuun yksi lapsi forkkaamalla.
+   * Tästä tulee se varsinainen tilausten käsittelijä. Tämä lapsi luo fifon
+     kuten fifo esimerkissä eli fifo suljetaan ja avataan jokaisen viestin
+     jälkeen ja luettu viesti tulostetaan.
+   * Muuta client handlerit (eli lapset jotka saavat connection socketin)
+     printf:n tilalta kirjoittamaan fifoon.
+*/
+/*
+  $ gcc -o exec_c2 ravintola_fifo_client.c  -Wall
+  $ ./exec_c2 localhost 5000 1   
+ */
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -82,19 +94,16 @@ int main(int argc, char *argv[])
 	strcat(buffer_sent, " ");
 
 
-	    /* get order */
-	    len = 256-strlen(buffer_sent);
-	    memset(buffer,0,len);
-	    fgets(buffer,len,stdin); 
-	    strcat(buffer_sent, buffer);
-//	    n = write(sockfd,buffer_sent,strlen(buffer_sent));
-//	    if (n < 0) error("ERROR writing to socket");
-	    fifofd = open(FIFOFILE,O_WRONLY);
-	    n = write(fifofd, buffer_sent, strlen(buffer_sent));
-	    if (n != strlen(buffer_sent) ) { 
-		error("Error in writting FIFO");
-	    }  
-	    close(fifofd);
-	
+	/* get order */
+	len = 256-strlen(buffer_sent);
+	memset(buffer,0,len);
+	fgets(buffer,len,stdin); 
+	strcat(buffer_sent, buffer);
+	fifofd = open(FIFOFILE,O_WRONLY);
+	n = write(fifofd, buffer_sent, strlen(buffer_sent));
+	if (n != strlen(buffer_sent) ) { 
+	    error("Error in writting FIFO");
+	}  
+	close(fifofd);
     }
 }

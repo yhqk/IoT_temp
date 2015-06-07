@@ -1,3 +1,6 @@
 exec_*
 *~
 *.o
+#*
+fifo*
+*.txt

@@ -1,6 +1,18 @@
-/* A server to take order from different clients
- * "Ravintola Step2" and write to a file
+/* Ravintola step 2
+   A server to take order from different clients and write to a file
+   * Lisää pääohjelmalle alkuun yksi lapsi forkkaamalla.
+   * Tästä tulee se varsinainen tilausten käsittelijä. Tämä lapsi luo fifon
+     kuten fifo esimerkissä eli fifo suljetaan ja avataan jokaisen viestin
+     jälkeen ja luettu viesti tulostetaan.
+   * Muuta client handlerit (eli lapset jotka saavat connection socketin)
+     printf:n tilalta kirjoittamaan fifoon.
 */
+
+/* 
+  $ gcc -o exec_s2 ravintola_fifo_server.c  -Wall
+  $ ./exec_s2 5000
+*/
+
 #include <stdio.h>
 #include <poll.h>
 #include <stdlib.h> //exit
@@ -11,6 +23,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h> 
 
 #define LOGFILE "order_list.txt"
 #define FIFOFILE "fifofile"
@@ -70,7 +83,7 @@ int main(int argc, char *argv[])
 	       pid, ppid);
 	fp_log = fopen(LOGFILE,"a");  
 	fprintf(fp_log, 
-		"\n=== Order list (ravintola_server_2 .c ===\n");
+		"\n=== Order list (ravintola_socket_*.c) ===\n");
 	fflush(fp_log); 
 
 	n = mkfifo(FIFOFILE,0777);
@@ -88,7 +101,7 @@ int main(int argc, char *argv[])
 		    n = read(fifo[0].fd,buffer,255);
 		    printf("\n%s",buffer);
 		    buffer[n] = '\0';
-		    fprintf(fp_log, buffer);
+                    fputs(buffer, fp_log);
 		    fflush(fp_log); 
 		}
 	    } else {
@@ -101,8 +114,7 @@ int main(int argc, char *argv[])
     } else if (child == -1 ){
 	perror("ERROR on fork1");
         exit(EXIT_FAILURE);
-    } else {
-      	return EXIT_SUCCESS;
-    }
+    } 
+    return EXIT_SUCCESS;
 } 
 

@@ -1,4 +1,23 @@
-// client for ravintola_server_1.c 
+/* Ravintola step 1
+  A client to take different orders  
+  * Tehdään ravintolan tilauspalvelu, joka toimii internetin yli.
+  * Luo socket, joka odottaa esim. portissa 5000 yhteyksiä. 
+    Kun yhteys on luoto, forkkaa lapsi ja anna uus yhdistetty 
+    socket (accept():n paluuarvo) sille. Lapsi hoitaa yhteyden 
+    clienttiin siten, että se lukee mitä clientillä on 
+    sanottavaa ja kirjottaa sen ulos. Kun read()-funktion 
+    paluuarvo on 0, sulje connection socket ja tapa lapsi.
+  * Nyt siis voi olla useampia clienttejä kiinni yhtä aikaa. 
+    Clientiksi kelpaa vaikka ”echo”-ohjelma tai voit kirjoittaa 
+    yksinkertaisen clientin.
+ */
+
+/* Compiling and Execution
+  $ gcc -o exec_c1 ravintola_sockets_client.c  -Wall
+  $ ./exec_c1 localhost 5000  
+
+  There can be serval clients from different termials. 
+ */
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,6 +27,7 @@
 #include <netdb.h> 
 #include <sys/time.h>
 #include <time.h>
+#include <unistd.h> 
 
 void error(char *msg)
 {
@@ -17,7 +37,7 @@ void error(char *msg)
 
 int main(int argc, char *argv[])
 {
-    int sockfd, portno, n, pid;
+    int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;  // old the way.     
     char buffer[256];
@@ -67,7 +87,8 @@ int main(int argc, char *argv[])
 	/* Obtain the time of day, and convert it to a tm struct. */
 	gettimeofday (&tv, NULL);
 	ptm = localtime (&tv.tv_sec);
-	strftime (time_string, sizeof (time_string), "%Y-%m-%d %H:%M:%S", ptm);
+	strftime (time_string, sizeof (time_string), 
+		    "%Y-%m-%d %H:%M:%S", ptm);
 	/* Add client ID and time stamp */
 	strcpy(buffer_sent, str_id); 
 	strcat(buffer_sent, time_string);
@@ -82,4 +103,5 @@ int main(int argc, char *argv[])
 	    error("ERROR writing to socket");
 	}  
     }
+    return 1; 
 }

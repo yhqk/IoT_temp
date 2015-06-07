@@ -1,10 +1,31 @@
-/* A server to take order from different client "Ravintola Step1"  */
+/* Ravintola step 1
+  A server to receive order from different clients
+ 
+  * Tehdään ravintolan tilauspalvelu, joka toimii internetin yli.
+  * Luo socket, joka odottaa esim. portissa 5000 yhteyksiä. 
+    Kun yhteys on luoto, forkkaa lapsi ja anna uus yhdistetty 
+    socket (accept():n paluuarvo) sille. Lapsi hoitaa yhteyden 
+    clienttiin siten, että se lukee mitä clientillä on 
+    sanottavaa ja kirjottaa sen ulos. Kun read()-funktion 
+    paluuarvo on 0, sulje connection socket ja tapa lapsi.
+  * Nyt siis voi olla useampia clienttejä kiinni yhtä aikaa. 
+    Clientiksi kelpaa vaikka ”echo”-ohjelma tai voit kirjoittaa 
+    yksinkertaisen clientin.
+ */
+
+/* Compiling and execution: 
+ $ gcc -o exec_s1 ravintola_sockets_server.c  -Wall
+ $ ./exec_s1 5000
+ */
+
+#include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
-#include <stdlib.h> //exit
-#include <string.h> //memset
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h> 
+#include <unistd.h> 
 
 void error(char *msg)
 {
@@ -50,7 +71,7 @@ int main(int argc, char *argv[])
     while (1){
 	newsockfd = accept(sockfd, 
 			   (struct sockaddr *) &cli_addr, 
-			   &clilen);
+			   (socklen_t *)&clilen);
 	if (newsockfd < 0) {
 	    error("ERROR on accept");
 	}
@@ -59,7 +80,7 @@ int main(int argc, char *argv[])
 	if (child == 0) {
 	    pid = getpid();
 	    ppid = getppid();
-	    printf("pid as %d; ppid as %d\n", pid, ppid);
+	    printf("New client pid as %d; ppid as %d\n", pid, ppid);
 	    while (n > 0 ) {
 		memset(buffer,0,256);
 		n = read(newsockfd,buffer,255);
@@ -76,4 +97,3 @@ int main(int argc, char *argv[])
 	} 
     }
 } 
-
